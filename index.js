@@ -193,7 +193,7 @@ const data = {
           id: 0,
           image: "https://xsgames.co/randomusers/assets/avatars/male/18.jpg",
           name: "Anand Patel",
-          experience: 2,
+          experience: 3,
         },
         {
           id: 1,
