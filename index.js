@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-
+const mongodb= require('./src/db/db-connection');
+const employeesModel = require("./src/models/employees");
 app.use(express.json());
 
 app.use(
@@ -277,6 +278,47 @@ const data = {
 
 app.get("/employees", (req, res) => {
   res.send(data);
+});
+app.post("/employees-add",async (req, res) => {
+  try {    
+    let createEmp = await employeesModel.create(req.body);
+      if(createEmp){
+        res.send({message:"Emp created Succesfully.",data:createEmp});
+      }else{
+
+        res.send({message:"Something Went Wrong!.",data:createEmp});
+      }
+    } catch (error) {
+      res.send({message:"Something Went Wrong!.",data:error});
+    
+  }
+});
+app.patch("/employees-edit/:id",async (req, res) => {
+  try {    
+    let empData = await employeesModel.updateOne({_id:req.params.id},req.body);
+    let updatedEmpData = await employeesModel.findById(req.params.id);
+      if(empData){
+        res.send({message:"Emp updated Succesfully.",data:updatedEmpData});
+      }else{
+        res.send({message:"Something Went Wrong!.",data:empData});
+      }
+    } catch (error) {
+      res.send({message:"Something Went Wrong!.",data:error});
+    
+  }
+});
+app.get("/employees-list",async (req, res) => {
+  try {    
+    let empData = await employeesModel.find();
+      if(empData.length){
+        res.send({message:"Emp Data.",data:empData});
+      }else{
+        res.send({message:"No Data Found!.",data:[]});
+      }
+    } catch (error) {
+      res.send({message:"Something Went Wrong!.",data:error});
+    
+  }
 });
 
 app.listen(3000, () => {
